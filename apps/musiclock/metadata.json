@@ -1,0 +1,20 @@
+{
+  "id": "musiclock",
+  "name": "Music Clock",
+  "shortName": "Music Clock",
+  "version": "0.01",
+  "description": "A simple clock that diplays the local with 3 clock infos below that automatically switches to music controls when detected.",
+  "icon": "icon.png",
+  "screenshots": [
+    { "url": "screenshot.png" },
+    { "url": "screenshot_music.png" }
+  ],
+  "type": "clock",
+  "tags": "clock",
+  "supports": ["BANGLEJS2"],
+  "readme": "README.md",
+  "storage": [
+    { "name": "musiclock.app.js", "url": "app.js" },
+    { "name": "musiclock.boot.js", "url": "boot.js" }
+  ]
+}
