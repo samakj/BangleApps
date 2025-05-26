@@ -1,0 +1,183 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="../../css/spectre.min.css" />
+    <link rel="stylesheet" href="../../css/spectre-icons.min.css" />
+    <style>
+      .multi-select {
+        /* e.g. day <select> */
+        height: 100%;
+      }
+
+      td.single-row {
+        /* no border between single rowspans */
+        border-bottom: none;
+      }
+
+      .btn-center {
+        justify-content: center;
+        display: flex;
+      }
+
+      .event-summary {
+        text-align: center;
+      }
+    </style>
+    <script src="../../core/lib/interface.js"></script>
+    <script>
+      let activeInput;
+      let hostInput;
+      let logsPathInput;
+      let linesPathInput;
+      let requestIdPrefixInput;
+      let uploadButton;
+
+      const localSettings = {};
+
+      const updateUploadButton = () => {
+        uploadButton.disabled = !(
+          localSettings.active != null &&
+          localSettings.host &&
+          localSettings.logsPath &&
+          localSettings.linesPath &&
+          localSettings.requestIdPrefix
+        );
+      };
+
+      const getElements = () => {
+        activeInput = document.getElementById("active");
+        hostInput = document.getElementById("host");
+        logsPathInput = document.getElementById("logs-path");
+        linesPathInput = document.getElementById("lines-path");
+        requestIdPrefixInput = document.getElementById("request-id-prefix");
+        uploadButton = document.getElementById("upload");
+
+        activeInput.addEventListener("change", (event) => {
+          localSettings.active = !!event.target.value;
+          updateUploadButton();
+        });
+        hostInput.addEventListener("change", (event) => {
+          localSettings.host = event.target.value;
+          updateUploadButton();
+        });
+        logsPathInput.addEventListener("change", (event) => {
+          localSettings.logsPath = event.target.value;
+          updateUploadButton();
+        });
+        linesPathInput.addEventListener("change", (event) => {
+          localSettings.linesPath = event.target.value;
+          updateUploadButton();
+        });
+        requestIdPrefixInput.addEventListener("change", (event) => {
+          localSettings.requestIdPrefix = event.target.value;
+          updateUploadButton();
+        });
+      };
+
+      const getSettings = () => {
+        Util.showModal("Loading...");
+        Util.readStorageJSON("remoteconsole.json", (data) => {
+          const settings = Object.assign(
+            {
+              active: false,
+              host: "",
+              logsPath: "/logs",
+              linesPath: "/lines",
+              requestIdPrefix: "rmcnsl",
+            },
+            data
+          );
+
+          activeInput.checked = !!settings.active;
+          hostInput.value = settings.host;
+          logsPathInput.value = settings.logsPath;
+          linesPathInput.value = settings.linesPath;
+          requestIdPrefixInput.value = settings.requestIdPrefix;
+
+          localSettings.active = settings.active;
+          localSettings.host = settings.host;
+          localSettings.logsPath = settings.logsPath;
+          localSettings.linesPath = settings.linesPath;
+          localSettings.requestIdPrefix = settings.requestIdPrefix;
+
+          updateUploadButton();
+          Util.hideModal();
+        });
+      };
+
+      const uploadSettings = () => {
+        Util.showModal("Uploading...");
+        Util.writeStorage(
+          "remoteconsole.json",
+          JSON.stringify(localSettings),
+          () => location.reload()
+        );
+      };
+
+      window.addEventListener("DOMContentLoaded", () => {
+        getElements();
+        getSettings();
+      });
+    </script>
+  </head>
+  <body>
+    <div class="divider"></div>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="col-5 col-xs-12">
+          <label class="form-label" for="fileinput">Active</label>
+        </div>
+        <div class="col-7 col-xs-12">
+          <label class="form-switch">
+            <input id="active" type="checkbox" /><i class="form-icon"></i
+          ></label>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-5 col-xs-12">
+          <label class="form-label" for="host">Host</label>
+        </div>
+        <div class="col-7 col-xs-12">
+          <input id="host" class="form-input" type="text" />
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-5 col-xs-12">
+          <label class="form-label" for="logs-path">Logs Path</label>
+        </div>
+        <div class="col-7 col-xs-12">
+          <input id="logs-path" class="form-input" type="text" />
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-5 col-xs-12">
+          <label class="form-label" for="lines-path">Lines Path</label>
+        </div>
+        <div class="col-7 col-xs-12">
+          <input id="lines-path" class="form-input" type="text" />
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-5 col-xs-12">
+        <label class="form-label" for="request-id-prefix"
+          >Request Id Prefix</label
+        >
+      </div>
+      <div class="col-7 col-xs-12">
+        <input id="request-id-prefix" class="form-input" type="text" />
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <button
+      id="upload"
+      class="btn btn-primary"
+      onClick="uploadSettings()"
+      disabled
+    >
+      Upload
+    </button>
+    <button id="reload" class="btn" onClick="location.reload()">Reload</button>
+  </body>
+</html>

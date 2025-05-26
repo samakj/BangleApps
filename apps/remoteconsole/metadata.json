@@ -1,0 +1,19 @@
+{
+  "id": "remoteconsole",
+  "name": "Remote Console",
+  "shortName": "Remote Console",
+  "version": "0.05",
+  "description": "View your bangles console from a remote computer and interact with it using a basic repl",
+  "icon": "app.png",
+  "tags": "tool",
+  "supports": ["BANGLEJS2"],
+  "readme": "README.md",
+  "interface": "interface.html",
+  "storage": [
+    { "name": "remoteconsole.app.js", "url": "app.js" },
+    { "name": "remoteconsole.boot.js", "url": "boot.js" },
+    { "name": "remoteconsole.settings.js", "url": "settings.js" },
+    { "name": "remoteconsole.img", "url": "app-icon.js", "evaluate": true }
+  ],
+  "data": [{ "name": "remoteconsole.json" }]
+}

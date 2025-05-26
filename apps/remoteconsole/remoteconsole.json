@@ -1,0 +1,7 @@
+{
+  "active": false,
+  "host": null,
+  "logsEndpoint": "logs",
+  "linesEndpoint": "lines",
+  "requestIdPrefix": "remoteconsole"
+}
